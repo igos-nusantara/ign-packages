@@ -1,0 +1,7 @@
+# The Bayu desktop, signed with the IGOS repository key.
+[bayu]
+name=Bayu
+baseurl=https://r2.igos-nusantara.or.id/26/bayu/
+enabled=1
+gpgcheck=1
+gpgkey=https://r2.igos-nusantara.or.id/26/RPM-GPG-KEY-IGN-REPO
