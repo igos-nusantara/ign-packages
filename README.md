@@ -8,6 +8,7 @@ to AlmaLinux, and the scripts that build and publish them:
 | `ign-release` | `/etc/os-release` and the release files, the dist macros, systemd presets; with `ign-repos` (`/etc/yum.repos.d/igos.repo`, `bayu.repo`) and `ign-gpg-keys` |
 | `ign-logos` | IGN's logos and pictures (anaconda, boot loader, icons, backgrounds), with `ign-logos-httpd` and `ign-logos-classic` |
 | `ign-berkas` | IGN's own files, in `/usr/share/ign-berkas` |
+| `ign-config` | IGN's terminal defaults from [igosnusantara/config](https://github.com/igosnusantara/config), system-wide: the bash prompt, aliases and `ex` (`/etc/profile.d/ign.sh`), tmux (`/etc/tmux.conf`) and fastfetch's IGN logo (`/etc/xdg/fastfetch`); a user's own files win |
 
 Each directory holds its `.spec` and its sources.
 

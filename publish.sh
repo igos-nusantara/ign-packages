@@ -15,8 +15,10 @@ rpms=("$ROOT"/out/*.noarch.rpm "$ROOT"/out/*.x86_64.rpm)
 
 scp -q "${rpms[@]}" "$HOST:/tmp/"
 names=$(printf '%s ' "${rpms[@]##*/}")
-ssh -o BatchMode=yes "$HOST" bash -euc "'
+ssh -o BatchMode=yes "$HOST" bash --norc -euc "'
   cd /tmp
+  # createrepo.sh writes the metadata as apache.
+  sudo chown -R apache: $DIR
   sudo install -o apache -g apache -m 0644 $names $DIR/
   rm -f $names
   sudo /opt/repo-sync/createrepo.sh ign
