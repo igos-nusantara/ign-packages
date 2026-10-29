@@ -1,5 +1,5 @@
 %global distro  IGOS Nusantara
-%define release_name    Bayu
+%define release_name    Ciremai
 %global major   26
 %global minor   1
 %global eol_date 2035-06-01
@@ -13,7 +13,7 @@ Name:           ign-release
 # Above the 2026.1 packages before; their version was IGN's year.
 Epoch:          1
 Version:        %{major}.%{minor}
-Release:        8
+Release:        9
 Summary:        %{distro} release files
 Group:          System Environment/Base
 License:        GPL-2.0-or-later
@@ -137,8 +137,9 @@ VERSION="%{major}.%{minor} (%{release_name})"
 ID="ign"
 ID_LIKE="rhel centos fedora"
 VERSION_ID="%{major}.%{minor}"
+VERSION_CODENAME="ciremai"
 PLATFORM_ID="platform:el%{el_major}"
-PRETTY_NAME="%{distro} %{major}.%{minor}%{?beta: %{beta}} (%{release_name})"
+PRETTY_NAME="%{distro} %{major}%{?beta: %{beta}} (%{release_name})"
 ANSI_COLOR="0;34"
 LOGO="ign-logo-icon"
 CPE_NAME="cpe:/o:ign:ign:%{major}.%{minor}"
@@ -286,6 +287,10 @@ install -p -m 0644 %{SOURCE700}  %{buildroot}%{_sysconfdir}/rpm/
 %{_sysconfdir}/pki/rpm-gpg
 
 %changelog
+* Fri Oct 30 2026 Eka Tresna Irawan <anak10thn@gmail.com> - 1:26.1-9
+- Codename Ciremai: IGOS Nusantara 26 (Ciremai) as PRETTY_NAME, shown as the
+  system version
+
 * Thu Oct 29 2026 Eka Tresna Irawan <anak10thn@gmail.com> - 1:26.1-8
 - Provide redhat-release, system-release and $releasever as EL 10.2, with
   %%rhel 10 and platform:el10: EL 10 and EPEL 10 packages such as
