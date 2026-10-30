@@ -2,11 +2,12 @@ Name:		ign-logos
 Summary:	IGOS Nusantara related icons and pictures
 Epoch:		1
 Version:	26
-Release:	4.ign26
+Release:	5.ign26
 URL:		https://pagure.io/ign-logos
 Source0:	https://pagure.io/ign-logos/archive/%{version}/ign-logos-%{version}.tar.gz
 License:	LicenseRef-ign-Logos
-Provides:	fedora-logos = 43
+Provides:	almalinux-logos = %{version}-%{release}
+Provides:	fedora-logos = 45
 Provides:	redhat-logos = %{version}-%{release}
 Provides:	gnome-logos = %{version}-%{release}
 Provides:	system-logos = %{version}-%{release}
