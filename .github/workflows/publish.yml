@@ -1,0 +1,65 @@
+# Builds the packages a push to main changes (a directory with a <name>.spec),
+# or those named when run by hand, signs them with the IGOS repository key and
+# publishes them to 26/ign: the repo host rebuilds and signs its metadata and
+# mirrors it to R2 (publish.sh). Runs on the self-hosted runner on sj (label
+# ign-builder), which has podman and SSH to the repo host.
+name: Publish
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      packages:
+        description: "Packages to build and publish (directory names, space separated); empty: every one"
+        required: false
+        default: ""
+
+concurrency: publish
+
+jobs:
+  publish:
+    runs-on: [self-hosted, ign-builder]
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Packages
+        id: packages
+        env:
+          REQUESTED: ${{ inputs.packages }}
+          BEFORE: ${{ github.event.before }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          all=$(for d in */; do d=${d%/}; [ -e "$d/$d.spec" ] && echo "$d"; done)
+          if [ "$EVENT" = push ]; then
+            # The directories the push changed; every one for a new branch.
+            if git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
+              changed=$(git diff --name-only "$BEFORE" "$GITHUB_SHA" | cut -d/ -f1 | sort -u)
+              packages=$(comm -12 <(echo "$all" | sort) <(echo "$changed"))
+            else
+              packages=$all
+            fi
+          elif [ -n "$REQUESTED" ]; then
+            for p in $REQUESTED; do
+              echo "$all" | grep -qx "$p" || { echo "No package $p" >&2; exit 1; }
+            done
+            packages=$REQUESTED
+          else
+            packages=$all
+          fi
+          packages=$(echo $packages)
+          echo "Packages: ${packages:-none}"
+          echo "list=$packages" >> "$GITHUB_OUTPUT"
+
+      - name: Build
+        if: steps.packages.outputs.list != ''
+        run: |
+          rm -rf out
+          ./build.sh ${{ steps.packages.outputs.list }}
+
+      - name: Sign and publish
+        if: steps.packages.outputs.list != ''
+        run: ./publish.sh

@@ -21,6 +21,13 @@ ssh -o BatchMode=yes "$HOST" bash --norc -euc "'
   sudo chown -R apache: $DIR
   sudo install -o apache -g apache -m 0644 $names $DIR/
   rm -f $names
+  # Every package, the new ones and any published before signing was.
+  for f in $DIR/*.rpm; do
+    rpm -qp --qf \"%{SIGPGP:pgpsig}\" \"\$f\" 2>/dev/null | grep -q \"Key ID\" && continue
+    sudo env GNUPGHOME=/opt/repo-sync/gnupg rpmsign --addsign \\
+      --define \"_gpg_name repo@igos-nusantara.or.id\" \"\$f\" >/dev/null
+    echo \"signed \${f##*/}\"
+  done
   sudo /opt/repo-sync/createrepo.sh ign
   export RCLONE_CONFIG=\$HOME/.config/rclone/rclone.conf
   rclone sync $DIR r2:repo/26/ign --exclude index.html --checksum --stats-one-line -v 2>&1 | tail -1
