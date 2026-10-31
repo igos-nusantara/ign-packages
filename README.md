@@ -40,15 +40,29 @@ Needs podman. Builds in an AlmaLinux 10 container, into `out/`:
 
 ## Publish
 
-Copies `out/`'s binary RPMs to the repo host's `26/ign`, rebuilds and signs its
-metadata there, and mirrors it to R2 (`https://r2.igos-nusantara.or.id/26/ign/`),
-where installed systems read it (the `igos-ign` repository):
+A push to `main` publishes the packages it changes, through the **Publish**
+workflow (`.github/workflows/publish.yml`) on the self-hosted runner on sj
+(label `ign-builder`). Run by hand (Actions > Publish > Run workflow), it takes
+package names, or publishes every one. It runs:
 
 ```shell
+./build.sh PACKAGE...
 ./publish.sh                # REPO_HOST=igos@103.175.219.85 by default
 ```
 
-Raise `Release` in the `.spec` (and add to its `%changelog`) for every change.
+`publish.sh` copies `out/`'s binary RPMs to the repo host's `26/ign`, signs
+them there with the IGOS repository key, with any package of `26/ign` not
+signed yet, rebuilds and signs the metadata, and mirrors it to R2
+(`https://r2.igos-nusantara.or.id/26/ign/`), where installed systems read it
+(the `igos-ign` repository). To check a package:
+
+```shell
+rpm --import https://r2.igos-nusantara.or.id/26/RPM-GPG-KEY-IGN-REPO
+rpm -K ign-release-*.rpm
+```
+
+Raise `Release` in the `.spec` (and add to its `%changelog`) for every change:
+the push publishes it.
 
 ## License
 
