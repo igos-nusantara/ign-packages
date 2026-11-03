@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Builds the IGN packages (ign-release, ign-logos, ign-berkas) from this
+# Builds the IGN packages (ign-release, ign-logos, ign-berkas...) from this
 # repository into out/: source and binary RPMs, in an AlmaLinux 10 container.
+# Sources given as URLs are downloaded.
 #   ./build.sh [PACKAGE...]        default: every directory with a .spec
 #   IMAGE=almalinux:10              the build container
 set -Eeuo pipefail
@@ -20,7 +21,7 @@ for package in "${packages[@]}"; do
     cp -a /src/. /root/rpmbuild/SOURCES/
     spec=/root/rpmbuild/SOURCES/'"$package"'.spec
     dnf -y -q builddep "$spec" >/dev/null
-    rpmbuild -ba "$spec" >/tmp/build.log 2>&1 || { tail -40 /tmp/build.log; exit 1; }
+    rpmbuild -ba --define "_disable_source_fetch 0" "$spec" >/tmp/build.log 2>&1 || { tail -40 /tmp/build.log; exit 1; }
     cp /root/rpmbuild/SRPMS/*.src.rpm /root/rpmbuild/RPMS/*/*.rpm /out/'
 done
 ls -l out
