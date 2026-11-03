@@ -9,8 +9,10 @@ to AlmaLinux, and the scripts that build and publish them:
 | `ign-logos` | IGN's logos and pictures (anaconda, boot loader, icons, backgrounds), with `ign-logos-httpd` and `ign-logos-classic` |
 | `ign-berkas` | IGN's own files, in `/usr/share/ign-berkas` |
 | `ign-config` | IGN's terminal defaults from [igosnusantara/config](https://github.com/igosnusantara/config), system-wide: the bash prompt, aliases and `ex` (`/etc/profile.d/ign.sh`), tmux (`/etc/tmux.conf`) and fastfetch's IGN logo (`/etc/xdg/fastfetch`); a user's own files win |
+| `eplq-cups` | Epson's CUPS driver for its LQ-2190, LQ-2680K, LQ-690K and LQ-730K dot-matrix printers, from Epson's x86_64 build (Epson no longer offers its source): its filter where EL10's CUPS looks, its PPDs with each printer's IEEE 1284 device ID (igos-nusantara/bayu#165) |
 
-Each directory holds its `.spec` and its sources.
+Each directory holds its `.spec` and its sources; a source given as a URL
+(`eplq-cups`'s) is downloaded by rpmbuild and checked in its spec.
 
 ## Enterprise Linux compatibility
 
